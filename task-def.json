@@ -25,7 +25,14 @@
       "name": "simple-php-app",
       "environment": [],
       "image": "srikanna/ecs-demo:v_%BUILD_NUMBER%",
-      "cpu": 10
+      "cpu": 10,
+      "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "aws-ecs-east",
+        "awslogs-region": "us-east-1"
+        }
+      }
     },
     {
       "volumesFrom": [
