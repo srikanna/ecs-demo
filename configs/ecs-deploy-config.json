@@ -1,0 +1,5 @@
+{
+	"CLUSTER_NAME" : "BAH-Demo",
+	"SERVICE_NAME" : "php-demo-svc-cli",
+	"TASK_FAMILY" : "php-sample-app"	
+}
