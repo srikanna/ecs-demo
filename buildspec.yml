@@ -9,10 +9,10 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_BUILD_ID .
-      - docker tag $IMAGE_REPO_NAME:$CODEBUILD_BUILD_ID $IMAGE_REPO_NAME:$CODEBUILD_BUILD_ID
+      - docker build -t $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'` .
+      - docker tag $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'` $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $IMAGE_REPO_NAME:$CODEBUILD_BUILD_ID
+      - docker push $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`
