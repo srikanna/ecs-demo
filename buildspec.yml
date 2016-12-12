@@ -11,14 +11,14 @@ phases:
       - echo Building the Docker image...
       - docker build -t $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'` .
       - docker tag $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'` $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`
-      - mkdir -p `echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`
-      - cp ./configs/ecs-deploy-config.json ./configs/outputs/`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`/
+      - mkdir -p ./outputs/`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`
+      - cp ./configs/ecs-deploy-config.json ./outputs/`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`/
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker push $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`
-      - sed -e "s;%BUILD_NUMBER%;`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`;g" task-def.json > ./configs/outputs/`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`/task-def.json
+      - sed -e "s;%BUILD_NUMBER%;`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`;g" configs/task-def.json > ./outputs/`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`/task-def.json
 artifacts:
   files:
-    - `echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`/**/*
+    - outputs/**/*
