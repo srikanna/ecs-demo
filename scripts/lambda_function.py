@@ -6,14 +6,16 @@ import boto3
 import zipfile
 import gzip
 import os.path
+from botocore.client import Config
 
 print('Loading function')
 
-s3 = boto3.client('s3')
-
+s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+ecs = boto3.client('ecs')
+codepipeline = boto3.client('codepipeline')
 
 def lambda_handler(event, context):
-    #print("Received event: " + json.dumps(event, indent=2))
+    print("Received event: " + json.dumps(event, indent=2))
 
     # Get the object from the event and show its content type
     bucket = event["CodePipeline.job"]["data"]["inputArtifacts"][0]["location"]["s3Location"]["bucketName"]
@@ -32,7 +34,10 @@ def lambda_handler(event, context):
         regTask = ecs.register_task_definition(family=configJson["TASK_FAMILY"],containerDefinitions=taskJson["containerDefinitions"],volumes=taskJson["volumes"])
         describeSvc = ecs.describe_services(cluster=configJson["CLUSTER_NAME"],services=[configJson["SERVICE_NAME"]])
         updateSvc = ecs.update_service(cluster=configJson["CLUSTER_NAME"],service=configJson["SERVICE_NAME"],desiredCount=describeSvc["services"][0]["desiredCount"],taskDefinition=regTask["taskDefinition"]["family"]+":"+str(regTask["taskDefinition"]["revision"]))
-        return response["success"]
+        
+        codepipeline.put_job_success_result(jobId=event["CodePipeline.job"]["id"])
+        return updateSvc["service"]["status"]
+        
     except Exception as e:
         print(e)
         raise e
