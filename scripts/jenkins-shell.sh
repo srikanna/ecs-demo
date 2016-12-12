@@ -8,7 +8,7 @@ TASK_FAMILY="php-sample-app"
 # Create a new task definition for this build
 cd ${WORKING_DIR}
 docker push srikanna/ecs-demo:v_${BUILD_NUMBER}
-sed -e "s;%BUILD_NUMBER%;${BUILD_NUMBER};g" ./configs/task-def.json > task-def-v_${BUILD_NUMBER}.json
+sed -e "s;%BUILD_NUMBER%;${BUILD_NUMBER};g" task-def.json > task-def-v_${BUILD_NUMBER}.json
 aws ecs register-task-definition --family php-sample-app --cli-input-json file://task-def-v_${BUILD_NUMBER}.json
 
 # Update the service with the new task definition and desired count

@@ -18,6 +18,6 @@ phases:
       - echo Pushing the Docker image...
       - docker push $IMAGE_REPO_NAME:v_`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`
       - sed -e "s;%BUILD_NUMBER%;`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`;g" task-def.json > ./configs/`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $1}'`/`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`/task-def.json
-  artifacts:
-    files:
-      - configs/**/*
+artifacts:
+  files:
+    - configs/**/*
