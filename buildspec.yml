@@ -21,4 +21,5 @@ phases:
       - sed -e "s;%BUILD_NUMBER%;`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`;g" task-def.json > ./configs/outputs/`echo $CODEBUILD_BUILD_ID |awk -F':' '{print $2}'`/task-def.json
 artifacts:
   files:
-    - configs/outputs/*
+    - configs/outputs/**/*
+  discard-paths: yes
